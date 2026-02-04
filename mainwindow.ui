@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>mainwindowClass</class>
+ <widget class="QMainWindow" name="mainwindowClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1094</width>
+    <height>658</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>mainwindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255, 0);</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="15,1,1">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>50</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="position">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+	background-color: rgba(255, 255, 255,200);
+    border: none;                       /* 无边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string>00:00:00</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="duration">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+	background-color: rgba(255, 255, 255,200);
+    border: none;                       /* 无边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string>/00:00:00</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QSlider" name="ProcessBarSlider">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0">
+        <property name="spacing">
+         <number>6</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+        </property>
+        <property name="leftMargin">
+         <number>300</number>
+        </property>
+        <property name="rightMargin">
+         <number>300</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="Forward_3">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Forward_2">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Forward">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="PlayButton">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color: rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 25px;                 /* 25像素圆角 */
+    min-width: 50px;                    /* 最小宽度50px */
+    min-height: 50px;                   /* 最小高度50px */
+    max-width: 50px;                    /* 最大宽度50px */
+    max-height: 50px;                   /* 最大高度50px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);          /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(255, 255, 255, 100);          /* 选中状态颜色 */
+}
+
+    /* 选中状态且悬停 */
+QPushButton:checked:hover {
+    background-color: rgba(224, 224, 224, 100);
+}
+    
+    /* 选中状态且按下 */
+QPushButton:checked:pressed {
+    background-color: rgba(204, 204, 204, 100);
+ }
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Next">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="Forward_5">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="modeChange">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+    background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
+    border: none;                       /* 无边框 */
+    border-radius: 4px;                 /* 4像素圆角 */
+    min-width: 30px;                    /* 最小宽度30px */
+    min-height: 30px;                   /* 最小高度30px */
+    max-width: 30px;                    /* 最大宽度30px */
+    max-height: 30px;                   /* 最大高度30px */
+    padding: 0px;                       /* 无内边距 */
+    margin: 0px;                        /* 无外边距 */
+}
+
+QPushButton:hover {
+    background-color: rgba(224, 224, 224, 100);         /* 鼠标悬停时淡灰色 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(204, 204, 204, 100);          /* 按下时稍深的灰色 */
+}
+
+QPushButton:checked {
+    background-color: rgba(208, 208, 208, 100);;          /* 选中状态颜色 */
+}
+
+QPushButton:focus {
+    outline: none;                      /* 移除焦点边框 */
+}</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1094</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>功能栏</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action"/>
+   <addaction name="setbackground"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <property name="styleSheet">
+    <string notr="true">alternate-background-color: rgba(255, 255, 255, 150);
+background-color: rgba(255, 255, 255, 0);
+selection-background-color: rgba(255, 255, 255, 150);</string>
+   </property>
+   <property name="windowTitle">
+    <string>播放列表</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QListWidget" name="listWidget">
+       <property name="styleSheet">
+        <string notr="true">QListWidget {
+    background-color: rgba(255, 255, 255, 100); /* 白色，透明度100（0-255） */
+
+}</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="action">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+   </property>
+   <property name="text">
+    <string>打开文件</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="setbackground">
+   <property name="icon">
+    <iconset theme="emblem-photos"/>
+   </property>
+   <property name="text">
+    <string>设置背景</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="deleteAction">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+   </property>
+   <property name="text">
+    <string>删除</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="mainwindow.qrc"/>
+ </resources>
+ <connections/>
+</ui>

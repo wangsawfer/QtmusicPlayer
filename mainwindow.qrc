@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/mainwindow">
+        <file>pause.svg</file>
+        <file>pause1.svg</file>
+        <file>play.svg</file>
+        <file>play1.svg</file>
+        <file>mode1.svg</file>
+        <file>mode2.svg</file>
+        <file>mode3.svg</file>
+        <file>mode4.svg</file>
+        <file>back.svg</file>
+        <file>front.svg</file>
+    </qresource>
+</RCC>
