@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "mainwindow.h"
 
@@ -94,13 +93,19 @@ mainwindow::mainwindow(QWidget* parent)
     m_device = new QMediaDevices(this);
     m_player->setAudioOutput(m_audioOutput);
     m_player->setLoops(QMediaPlayer::Infinite);//默认单曲循环
+    m_audioOutput->setVolume(1.0);
 
     //进度条初始化
     ui->ProcessBarSlider->setRange(0, 0);
     ui->ProcessBarSlider->setTracking(true);  // 启用跟踪，拖动时实时更新
+    ui->soundSlider->setRange(0, 100);
+    ui->soundSlider->setTracking(true);
+    ui->soundSlider->setValue(100);
+
 
     //设置播放列表的上下文菜单
     ui->listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->listWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     
     //信号槽的连接
 
@@ -124,11 +129,16 @@ mainwindow::mainwindow(QWidget* parent)
     connect(ui->modeChange, &QPushButton::clicked, this, &mainwindow::modeChange);
     connect(ui->setbackground, &QAction::triggered, this, &mainwindow::selectBackground);
     connect(ui->listWidget, &QListWidget::customContextMenuRequested, this, &mainwindow::playListMenu);
-
+    connect(ui->left, &QPushButton::clicked, this, &mainwindow::rewind);
+    connect(ui->right, &QPushButton::clicked, this, &mainwindow::Fast_forward);
+    connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSet);
+    connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSvgChange);
+    connect(ui->soundChange, &QPushButton::clicked, this, &mainwindow::Mute);
     //各样式表初始化
     //播放按钮
     ui->PlayButton->setFixedSize(50, 50); // 直径
     ui->PlayButton->setCheckable(true); // 可切换状态
+    ui->PlayButton->setShortcut(QKeySequence(tr("Space")));//快捷键
 
     QIcon icon1;
     icon1.addFile(":/mainwindow/play.svg", QSize(60, 60), QIcon::Normal, QIcon::Off);
@@ -150,7 +160,16 @@ mainwindow::mainwindow(QWidget* parent)
     icon4.addFile(":/mainwindow/mode1.svg", QSize(30, 30), QIcon::Normal);
     ui->modeChange->setIcon(icon4);
     ui->modeChange->setIconSize(QSize(30, 30));
-
+    //快进和快退
+    ui->left->setIcon(QIcon(":/mainwindow/left.svg"));
+    ui->right->setIcon(QIcon(":/mainwindow/right.svg"));
+    ui->left->setIconSize(QSize(30, 30));
+    ui->right->setIconSize(QSize(30, 30));
+    ui->left->setShortcut(QKeySequence(tr("Left")));
+    ui->right->setShortcut(QKeySequence(tr("Right")));
+    //音量按钮
+    ui->soundChange->setIcon(QIcon(":/mainwindow/sound3.svg"));
+    ui->soundChange->setIconSize(QSize(30, 30));
 
     readItem();
     readBackgroundDir();
@@ -565,7 +584,8 @@ void mainwindow::modeChange() {
 //播放列表右键菜单
 void mainwindow::playListMenu(const QPoint &pos) {
     QMenu menu;
-    QAction* deleteAction = menu.addAction("\345\210\240\351\231\244");
+    QAction* deleteAction = menu.addAction("\345\210\240\351\231\244\n\n\n\n\n\n\n\n\n\n\n");
+    deleteAction->setShortcut(QKeySequence::Delete);
     if (ui->listWidget->selectedItems().isEmpty()) {
         deleteAction->setEnabled(false);
     }
@@ -613,5 +633,65 @@ void mainwindow::playListMenu(const QPoint &pos) {
                 }
             }
         }
+    }
+}
+
+//快进和快退
+void mainwindow::rewind() {
+    int step = ui->stepedit->text().toInt();
+    if ((m_player->position() - step >= 0) && step >= 0) {
+        m_player->setPosition(m_player->position() - step);
+    }
+}
+void mainwindow::Fast_forward() {
+    int step = ui->stepedit->text().toInt();
+    if (m_player->position() + step <= m_player->duration() && step >= 0) {
+        m_player->setPosition(m_player->position() + step);
+    }
+}
+
+//音量调节
+void mainwindow::soundSet() {
+    qint64 value = ui->soundSlider->value();
+
+    if (value == 0) {
+        ismute == 1;
+    }
+    else {
+        ismute == 0;
+    }
+    ui->soundLabel->setText(QString::number(value));
+    m_audioOutput->setVolume(value / 100.0);
+}
+void mainwindow::soundSvgChange() {
+    int value = ui->soundSlider->value();
+    if (value == 0) {
+        ui->soundChange->setIcon(QIcon(":/mainwindow/sound0.svg"));
+        ui->soundChange->setIconSize(QSize(30, 30));
+    }
+    else if (value > 0 && value <= 33) {
+        ui->soundChange->setIcon(QIcon(":/mainwindow/sound1.svg"));
+        ui->soundChange->setIconSize(QSize(30, 30));
+    }
+    else if (value > 33 && value <= 66) {
+        ui->soundChange->setIcon(QIcon(":/mainwindow/sound2.svg"));
+        ui->soundChange->setIconSize(QSize(30, 30));
+    }
+    else if (value > 66 && value <= 100) {
+        ui->soundChange->setIcon(QIcon(":/mainwindow/sound3.svg"));
+        ui->soundChange->setIconSize(QSize(30, 30));
+    }
+}
+void mainwindow::Mute() {
+    if (!ismute) {
+        soundValue = ui->soundSlider->value();
+        ui->soundSlider->setValue(0);
+        m_audioOutput->setVolume(0);
+        ismute = 1;
+    }
+    else {
+        ui->soundSlider->setValue(soundValue);
+        m_audioOutput->setVolume(soundValue/100.0);
+        ismute = 0;
     }
 }

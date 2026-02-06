@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
-    <height>658</height>
+    <width>1143</width>
+    <height>704</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -99,7 +99,7 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,0,0,0,0,0">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,1,1,1,1,1,1,1">
         <property name="spacing">
          <number>6</number>
         </property>
@@ -107,16 +107,44 @@
          <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
         </property>
         <property name="leftMargin">
-         <number>300</number>
+         <number>200</number>
         </property>
         <property name="rightMargin">
-         <number>300</number>
+         <number>200</number>
         </property>
         <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="Forward_3">
+         <widget class="QWidget" name="widget_2" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLineEdit" name="stepedit">
+             <property name="minimumSize">
+              <size>
+               <width>202</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit {
+	background-color: rgba(255, 255, 255,0);
+    border: none;                       /* 无边框 */
+}</string>
+             </property>
+             <property name="text">
+              <string>1000</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="modeChange">
           <property name="styleSheet">
            <string notr="true">QPushButton {
     background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
@@ -152,7 +180,7 @@ QPushButton:focus {
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Forward_2">
+         <widget class="QPushButton" name="left">
           <property name="styleSheet">
            <string notr="true">QPushButton {
     background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
@@ -306,7 +334,7 @@ QPushButton:focus {
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Forward_5">
+         <widget class="QPushButton" name="right">
           <property name="styleSheet">
            <string notr="true">QPushButton {
     background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
@@ -342,7 +370,7 @@ QPushButton:focus {
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="modeChange">
+         <widget class="QPushButton" name="soundChange">
           <property name="styleSheet">
            <string notr="true">QPushButton {
     background-color:rgba(255, 255, 255, 100);  /* 与界面背景色一致 */
@@ -377,6 +405,59 @@ QPushButton:focus {
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QWidget" name="widget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>220</width>
+            <height>50</height>
+           </size>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="9,1">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QSlider" name="soundSlider">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="soundLabel">
+             <property name="minimumSize">
+              <size>
+               <width>31</width>
+               <height>17</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLineEdit {
+	background-color: rgba(255, 255, 255,0);
+    border: none;                       /* 无边框 */
+}</string>
+             </property>
+             <property name="text">
+              <string>100</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -388,8 +469,8 @@ QPushButton:focus {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1094</width>
-     <height>21</height>
+     <width>1143</width>
+     <height>33</height>
     </rect>
    </property>
   </widget>

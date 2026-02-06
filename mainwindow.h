@@ -54,6 +54,13 @@ private slots:
     void modePlay();
     //播放列表右键菜单
     void playListMenu(const QPoint& pos);
+    //快进与快退
+    void Fast_forward();
+    void rewind();
+    //音量调节
+    void soundSet();
+    void soundSvgChange();
+    void Mute();
 private:
     Ui::mainwindowClass *ui;
     Ui::warnningwidget* warnning_ui;
@@ -63,8 +70,10 @@ private:
     int playingItemIndex = 0;
     int playMode = 1;
     qint64 pos;
+    qint64 soundValue = 100;
     bool isplaying = 0;
     bool isseeking = 0;//是否正在拖到进度条
+    bool ismute = 0;
     QPixmap background;
     QStringList playList = {};
     QString BackgroundDir;
