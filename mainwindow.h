@@ -8,8 +8,14 @@
 #include <QAudioDevice>
 #include <QDateTime>
 #include <QFileInfo>
+
 #include "ui_mainwindow.h"
 #include "ui_warnning.h"
+#include "ui_web.h"
+
+#include "QWarningWindow.h"
+#include "MyWebEngineView.h"
+#include "WebContain.h"
 
 class mainwindow : public QMainWindow
 {
@@ -24,8 +30,11 @@ public:
     void highlight(int index);
     void readBackgroundDir();
     void writeBackgroundDir();
+
 protected:
     void paintEvent(QPaintEvent* event) override;//背景重绘
+
+    //播放器槽函数
 private slots:
     void select();//添加音乐文件
     //背景设置
@@ -61,11 +70,25 @@ private slots:
     void soundSet();
     void soundSvgChange();
     void Mute();
+    //刷新播放列表
+	//void refreshItem();
+
+    //网络浏览器槽函数
+private slots:
+    void webinit();
+	void updateURL(int index);
+    void newWeb();
+	
+	//ui指针和窗口指针
 private:
     Ui::mainwindowClass *ui;
     Ui::warnningwidget* warnning_ui;
+	Ui::webWindow* web_ui;
 private:
-    QMainWindow* warning_window;
+    QWarningWindow* warning_window;
+	QMainWindow* web_window;
+
+	//页面相关变量
 private:
     int playingItemIndex = 0;
     int playMode = 1;
@@ -80,5 +103,9 @@ private:
     QMediaPlayer* m_player;
     QAudioOutput* m_audioOutput;
     QMediaDevices* m_device;
+
+    //自定义控件实现
+private:
+	WebContain* webContain;
 };
 

@@ -81,10 +81,19 @@ void mainwindow::highlight(int index) {
 }
 
 mainwindow::mainwindow(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::mainwindowClass), warnning_ui(new Ui::warnningwidget), warning_window(new QMainWindow)
+    : QMainWindow(parent), ui(new Ui::mainwindowClass), warnning_ui(new Ui::warnningwidget),web_ui(new Ui::webWindow), 
+	  warning_window(new QWarningWindow(NULL)), web_window(new QMainWindow),
+	  webContain(new WebContain(NULL))
 {
     ui->setupUi(this);
     warnning_ui->setupUi(warning_window);
+	web_ui->setupUi(web_window);
+
+    web_ui->gridLayout->addWidget(webContain, 1, 0, 1, 1);
+	QPushButton* newWebButton = new QPushButton("+");
+	newWebButton->setFixedSize(25, 25);
+    webContain->setCornerWidget(newWebButton);
+
     setWindowTitle("demo1");
     setDir();
     //媒体播放器初始化
@@ -134,6 +143,12 @@ mainwindow::mainwindow(QWidget* parent)
     connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSet);
     connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSvgChange);
     connect(ui->soundChange, &QPushButton::clicked, this, &mainwindow::Mute);
+
+    //网络相关实现
+	connect(ui->webbotton, &QAction::triggered, this, &mainwindow::webinit);
+	connect(newWebButton, &QPushButton::clicked, this, &mainwindow::newWeb);
+	connect(webContain, &WebContain::currentChanged, this, &mainwindow::updateURL);
+	
     //各样式表初始化
     //播放按钮
     ui->PlayButton->setFixedSize(50, 50); // 直径
@@ -174,6 +189,7 @@ mainwindow::mainwindow(QWidget* parent)
     readItem();
     readBackgroundDir();
     update();
+	
 }
 
 mainwindow::~mainwindow()
@@ -184,6 +200,9 @@ mainwindow::~mainwindow()
     delete m_device;
     delete warnning_ui;
     delete warning_window;
+	delete web_ui;
+	delete web_window;
+	delete webContain;
 }
 
 void mainwindow::cancel() {
@@ -203,9 +222,12 @@ void mainwindow::select() {
         QString filePath = files.at(i);
         QFileInfo fileInfo(filePath);
         QString fileName = fileInfo.fileName();
+        if(ui->listWidget->findItems(fileName, Qt::MatchExactly).count() > 0) {
+            continue;
+		}
         copyFiles.append(MUSICDIR + "/" + fileName);
         QFile::copy(filePath, copyFiles.at(i));
-        ui->listWidget->addItem(fileName);
+        ui->listWidget->addItem(fileName);  
     }
     playList << copyFiles;
     writeItem();
@@ -367,7 +389,7 @@ void mainwindow::nextItem(){
 //播放按钮绑定
 void mainwindow::buttonToggled(bool checked) {
     if (playingItemIndex != -1) {
-        if (checked) {
+        if (checked && !playList.isEmpty()) {
             //未指定媒体源初始化为第一个
             if (m_player->mediaStatus() == QMediaPlayer::NoMedia()) {
                 m_player->setSource(QUrl::fromLocalFile(playList.at(0)));
@@ -496,11 +518,10 @@ void mainwindow::setPos() {
     }
 }
 void mainwindow::changeDevice() {
-    qDebug() << "11111111111111";
     m_player->stop();
     m_audioOutput->setDevice(m_device->defaultAudioOutput());
     m_player->setSource(playList.at(playingItemIndex));
-    while (!m_player->isSeekable() || !m_player->mediaStatus()==QMediaPlayer::LoadedMedia) {
+    while (!(m_player->isSeekable()) || !(m_player->mediaStatus()==QMediaPlayer::LoadedMedia)) {
     }
     m_player->setPosition(pos);
     if (isplaying) {
@@ -600,15 +621,14 @@ void mainwindow::playListMenu(const QPoint &pos) {
                     QFile::remove(playList.at(row));
                     playList.removeAt(row);
                     delete ui->listWidget->takeItem(row);
+					playingItemIndex = ui->listWidget->row(ui->listWidget->currentItem());
                     writeItem();
                 }
                 else  {
                     if (ui->listWidget->count() > 1) {
                         m_player->stop();
-                        qDebug() << "11111";
                         delete ui->listWidget->takeItem(row);
                         if (row == ui->listWidget->count()) {
-                            qDebug() << "11111";
                             playingItemIndex -= 1;
                             m_player->setSource(playList.at(playingItemIndex));
                         }
@@ -616,9 +636,9 @@ void mainwindow::playListMenu(const QPoint &pos) {
                             m_player->setSource(playList.at(playingItemIndex));
                         }
                         highlight(playingItemIndex);
-                        m_player->play();
                         QFile::remove(playList.at(row));
                         playList.removeAt(row);
+                        m_player->play();
                         writeItem();
                     }
                     else {
@@ -655,10 +675,10 @@ void mainwindow::soundSet() {
     qint64 value = ui->soundSlider->value();
 
     if (value == 0) {
-        ismute == 1;
+        ismute = 1;
     }
     else {
-        ismute == 0;
+        ismute = 0;
     }
     ui->soundLabel->setText(QString::number(value));
     m_audioOutput->setVolume(value / 100.0);

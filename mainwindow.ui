@@ -486,6 +486,8 @@ QPushButton:focus {
    </attribute>
    <addaction name="action"/>
    <addaction name="setbackground"/>
+   <addaction name="refresh"/>
+   <addaction name="webbotton"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_2">
@@ -555,12 +557,26 @@ selection-background-color: rgba(255, 255, 255, 150);</string>
     <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
-  <action name="deleteAction">
+  <action name="webbotton">
    <property name="icon">
-    <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+    <iconset theme="QIcon::ThemeIcon::AudioCard"/>
    </property>
    <property name="text">
-    <string>删除</string>
+    <string>From Internet</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="refresh">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::ViewRestore"/>
+   </property>
+   <property name="text">
+    <string>刷新</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
