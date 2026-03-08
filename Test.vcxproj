@@ -37,13 +37,13 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.10.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;network;qml;widgets;multimedia;multimediawidgets;webchannel;webenginecore;websockets;webview;xml;networkauth;webenginewidgets;webenginequick</QtModules>
+    <QtModules>core;gui;widgets;multimedia;multimediawidgets;webenginecore;websockets;webview;webenginewidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtLibrarySearchPath>$(QtToolsPath);$(QtLibrarySearchPath)</QtLibrarySearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.10.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;network;qml;widgets;multimedia;multimediawidgets;webchannel;webenginecore;websockets;webview;xml;networkauth;webenginewidgets;webenginequick</QtModules>
+    <QtModules>core;gui;widgets;multimedia;multimediawidgets;webenginecore;websockets;webview;webenginewidgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtLibrarySearchPath>$(QtToolsPath);$(QtLibrarySearchPath)</QtLibrarySearchPath>
   </PropertyGroup>
@@ -80,7 +80,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <QtMoc>
@@ -99,7 +99,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -109,18 +109,23 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="downloadWindow.cpp" />
     <ClCompile Include="MyWebEngineView.cpp" />
     <ClCompile Include="QWarningWindow.cpp" />
     <ClCompile Include="web.cpp" />
     <ClCompile Include="WebContain.cpp" />
+    <ClCompile Include="WebWindow.cpp" />
+    <QtMoc Include="WebWindow.h" />
     <QtMoc Include="WebContain.h" />
     <QtRcc Include="mainwindow.qrc" />
+    <QtUic Include="download.ui" />
     <QtUic Include="mainwindow.ui" />
     <QtMoc Include="mainwindow.h" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="main.cpp" />
     <QtMoc Include="QWarningWindow.h" />
     <QtMoc Include="MyWebEngineView.h" />
+    <QtMoc Include="downloadWindow.h" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>

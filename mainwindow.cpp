@@ -81,18 +81,10 @@ void mainwindow::highlight(int index) {
 }
 
 mainwindow::mainwindow(QWidget* parent)
-    : QMainWindow(parent), ui(new Ui::mainwindowClass), warnning_ui(new Ui::warnningwidget),web_ui(new Ui::webWindow), 
-	  warning_window(new QWarningWindow(NULL)), web_window(new QMainWindow),
-	  webContain(new WebContain(NULL))
+    : QMainWindow(parent), ui(new Ui::mainwindowClass)
 {
     ui->setupUi(this);
-    warnning_ui->setupUi(warning_window);
-	web_ui->setupUi(web_window);
 
-    web_ui->gridLayout->addWidget(webContain, 1, 0, 1, 1);
-	QPushButton* newWebButton = new QPushButton("+");
-	newWebButton->setFixedSize(25, 25);
-    webContain->setCornerWidget(newWebButton);
 
     setWindowTitle("demo1");
     setDir();
@@ -122,7 +114,6 @@ mainwindow::mainwindow(QWidget* parent)
     connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &mainwindow::play);
     connect(ui->Forward, &QPushButton::clicked, this, &mainwindow::forwardItem);
     connect(ui->Next, &QPushButton::clicked, this, &mainwindow::nextItem);
-    connect(warnning_ui->pushButton, &QPushButton::clicked, this, &mainwindow::cancel);
     connect(ui->PlayButton, &QPushButton::toggled, this, &mainwindow::buttonToggled);
     connect(m_player, &QMediaPlayer::playbackStateChanged, this, &mainwindow::mediaStateChanged);
     connect(ui->ProcessBarSlider, &QSlider::sliderPressed, this, &mainwindow::sliderPressed);
@@ -143,12 +134,13 @@ mainwindow::mainwindow(QWidget* parent)
     connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSet);
     connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSvgChange);
     connect(ui->soundChange, &QPushButton::clicked, this, &mainwindow::Mute);
+    connect(ui->refresh, &QAction::triggered, this, &mainwindow::refreshItem);
 
     //网络相关实现
 	connect(ui->webbotton, &QAction::triggered, this, &mainwindow::webinit);
-	connect(newWebButton, &QPushButton::clicked, this, &mainwindow::newWeb);
-	connect(webContain, &WebContain::currentChanged, this, &mainwindow::updateURL);
-	
+    connect(ui->actiondownload, &QAction::triggered, this, &mainwindow::download);
+    
+
     //各样式表初始化
     //播放按钮
     ui->PlayButton->setFixedSize(50, 50); // 直径
@@ -198,24 +190,26 @@ mainwindow::~mainwindow()
     delete m_player;
     delete m_audioOutput;
     delete m_device;
-    delete warnning_ui;
-    delete warning_window;
-	delete web_ui;
 	delete web_window;
-	delete webContain;
+    delete download_page;
 }
 
-void mainwindow::cancel() {
-    warning_window->close();
+void mainwindow::closeEvent(QCloseEvent* event) {
+    if (web_window != nullptr) {
+        web_window->close();
+    }
+    if(download_page != nullptr) {
+        download_page->close();
+	}
+    event->accept();
 }
-
 //选择播放文件
 void mainwindow::select() {
     QStringList files = QFileDialog::getOpenFileNames(
         this,                      
         "Select music files",
         QDir::homePath(),
-        "MP3(*.mp3)"
+        "MP3 (*.mp3);;MP4 (*.mp4)"
     );
     QStringList copyFiles;
     for (int i = 0; i < files.count(); i++) {
@@ -239,7 +233,7 @@ void mainwindow::selectBackground() {
         this,
         "Select background",
         QDir::homePath(),
-        "PNG(*.png),JPG(*.jpg)"
+        "PNG(*.png);;JPG(*.jpg)"
     );
     if (!files.isEmpty()) {
         QFileInfo fileInfo(files.at(0));
@@ -289,8 +283,7 @@ void mainwindow::play(QListWidgetItem *item) {
         item->setForeground(QColor(Qt::black));
     }
     else {
-        warning_window->show();
-        QApplication::beep();
+        new QWarningWindow(nullptr, QString("文件不存在"));
         item->setForeground(QColor(Qt::red));
     }
 }
@@ -311,8 +304,7 @@ void mainwindow::forwardItem() {
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
             else {
-                warning_window->show();
-                QApplication::beep();
+                new QWarningWindow(nullptr, QString("文件不存在"));
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::red));
                 forwardItem();
             }
@@ -330,8 +322,7 @@ void mainwindow::forwardItem() {
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
             else {
-                warning_window->show();
-                QApplication::beep();
+                new QWarningWindow(nullptr, QString("文件不存在"));
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::red));
                 forwardItem();
             }
@@ -355,8 +346,7 @@ void mainwindow::nextItem(){
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
             else {
-                warning_window->show();
-                QApplication::beep();
+                new QWarningWindow(nullptr, QString("文件不存在"));
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::red));
                 nextItem();
             }
@@ -374,8 +364,7 @@ void mainwindow::nextItem(){
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
             else {
-                warning_window->show();
-                QApplication::beep();
+                new QWarningWindow(nullptr, QString("文件不存在"));
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::red));
                 nextItem();
             }
@@ -714,4 +703,23 @@ void mainwindow::Mute() {
         m_audioOutput->setVolume(soundValue/100.0);
         ismute = 0;
     }
+}
+
+void mainwindow::refreshItem() {
+    QString directoryPath = MUSICDIR;
+    QDir directory(directoryPath);
+
+    QStringList nameFilters;
+	nameFilters << "*.mp3" << "*.mp4";//设置过滤器，指定要查找的文件类型
+    QStringList files = directory.entryList(nameFilters, QDir::Files);
+
+	//完整路径列表
+    QStringList fullPaths;
+    for (const QString& fileName : files) {
+        if (!playList.contains(directory.absoluteFilePath(fileName))) {
+            playList << directory.absoluteFilePath(fileName);
+			ui->listWidget->addItem(fileName);
+		}
+    }
+    writeItem();
 }

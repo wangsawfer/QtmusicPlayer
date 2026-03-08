@@ -488,6 +488,7 @@ QPushButton:focus {
    <addaction name="setbackground"/>
    <addaction name="refresh"/>
    <addaction name="webbotton"/>
+   <addaction name="actiondownload"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="dockWidget_2">
@@ -577,6 +578,17 @@ selection-background-color: rgba(255, 255, 255, 150);</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actiondownload">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::GoDown"/>
+   </property>
+   <property name="text">
+    <string>download</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

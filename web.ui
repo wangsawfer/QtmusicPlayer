@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1159</width>
-    <height>634</height>
+    <height>668</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,16 +71,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1159</width>
-     <height>33</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidget">
    <property name="minimumSize">
@@ -91,6 +81,9 @@
    </property>
    <property name="features">
     <set>QDockWidget::DockWidgetFeature::DockWidgetClosable</set>
+   </property>
+   <property name="windowTitle">
+    <string>捕获</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -113,11 +106,60 @@
       <number>0</number>
      </property>
      <item row="0" column="0">
-      <widget class="QWidget" name="widget_2" native="true"/>
+      <widget class="QPlainTextEdit" name="detectoutput">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
   </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1159</width>
+     <height>33</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actiondownload"/>
+   <addaction name="actioncatch"/>
+  </widget>
+  <action name="actiondownload">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::GoDown"/>
+   </property>
+   <property name="text">
+    <string>download</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actioncatch">
+   <property name="text">
+    <string>catch</string>
+   </property>
+   <property name="shortcut">
+    <string>F</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -58,12 +58,21 @@
     <ClCompile Include="WebContain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="downloadWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WebWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="warnning.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="web.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="download.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -75,6 +84,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="WebContain.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="WebWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="downloadWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

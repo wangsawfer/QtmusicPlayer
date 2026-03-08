@@ -1,21 +1,15 @@
 #pragma once
 
 
-#include <QtWidgets/QMainWindow>
-#include <QMediaPlayer>
-#include <QAudioOutput>
-#include <QMediaDevices>
-#include <QAudioDevice>
-#include <QDateTime>
-#include <QFileInfo>
 
+
+#include "stdafx.h"
 #include "ui_mainwindow.h"
-#include "ui_warnning.h"
-#include "ui_web.h"
+
 
 #include "QWarningWindow.h"
-#include "MyWebEngineView.h"
-#include "WebContain.h"
+#include "WebWindow.h"
+#include "downloadWindow.h"
 
 class mainwindow : public QMainWindow
 {
@@ -33,7 +27,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent* event) override;//背景重绘
-
+    void closeEvent(QCloseEvent* event) override;
     //播放器槽函数
 private slots:
     void select();//添加音乐文件
@@ -56,8 +50,6 @@ private slots:
     //播放时长和进度条与播放进度绑定
     void totalDuration(qint64 duration);
     void setPosition(qint64 position);
-    //错误窗口关闭
-    void cancel();
     //播放模式切换
     void modeChange();
     void modePlay();
@@ -71,22 +63,17 @@ private slots:
     void soundSvgChange();
     void Mute();
     //刷新播放列表
-	//void refreshItem();
-
+	void refreshItem();
+    void download();
     //网络浏览器槽函数
 private slots:
     void webinit();
-	void updateURL(int index);
-    void newWeb();
-	
+
 	//ui指针和窗口指针
 private:
     Ui::mainwindowClass *ui;
-    Ui::warnningwidget* warnning_ui;
-	Ui::webWindow* web_ui;
-private:
-    QWarningWindow* warning_window;
-	QMainWindow* web_window;
+
+
 
 	//页面相关变量
 private:
@@ -103,9 +90,9 @@ private:
     QMediaPlayer* m_player;
     QAudioOutput* m_audioOutput;
     QMediaDevices* m_device;
-
+	WebWindow* web_window;
+    downloadWindow* download_page;
     //自定义控件实现
-private:
-	WebContain* webContain;
+
 };
 

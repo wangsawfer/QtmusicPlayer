@@ -13,5 +13,6 @@ public:
 	void updateWebList(int index);
 public:
 	QList<MyWebEngineView*> webList;
+
 };
 
