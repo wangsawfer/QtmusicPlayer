@@ -14,5 +14,6 @@
         <file>sound1.svg</file>
         <file>sound2.svg</file>
         <file>sound3.svg</file>
+        <file>icon.ico</file>
     </qresource>
 </RCC>

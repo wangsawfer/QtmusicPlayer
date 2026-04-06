@@ -85,8 +85,9 @@ mainwindow::mainwindow(QWidget* parent)
 {
     ui->setupUi(this);
 
+	setWindowIcon(QIcon(":/mainwindow/icon.ico"));
 
-    setWindowTitle("demo1");
+    setWindowTitle("\345\245\266\351\276\231\346\222\255\346\224\276\345\231\250");
     setDir();
     //媒体播放器初始化
     m_player = new QMediaPlayer(this);
