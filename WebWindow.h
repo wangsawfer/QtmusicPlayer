@@ -4,7 +4,7 @@
 #include "ui_web.h"
 #include "MyWebEngineView.h"
 #include "WebContain.h"
-
+#include <QWebEngineProfile>
 
 class WebWindow  : public QMainWindow
 {
@@ -18,8 +18,11 @@ public:
 	WebContain* webContain;
 
 public:
-	void closeEvent(QCloseEvent* event) override;
+	void setupProfile();
 
+public:
+	void closeEvent(QCloseEvent* event) override;
+	
 public slots:
 	void updateURL(int index);
 	void updatetitle(MyWebEngineView* view);
@@ -28,9 +31,11 @@ public slots:
 	void download();
 	void linkhover(const QUrl& url);
 	void catchUrl();
+	void closeWeb(int index);
 signals:
 	void downloaded();
 public:
 	QString linkhoverURL = {};
+	QWebEngineProfile* g_profile = nullptr;
 };
 

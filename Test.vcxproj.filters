@@ -64,6 +64,15 @@
     <ClCompile Include="WebWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="selectBackgroundwindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="slideRect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyWebEnginePage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="warnning.ui">
@@ -73,6 +82,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="download.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="selectBackgroundwindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>
@@ -92,12 +104,21 @@
     <QtMoc Include="downloadWindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="selectBackgroundwindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="MyWebEnginePage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="slideRect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

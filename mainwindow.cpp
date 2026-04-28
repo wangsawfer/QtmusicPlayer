@@ -241,6 +241,13 @@ void mainwindow::selectBackground() {
         QString filename = fileInfo.fileName();
         QFile::copy(files.at(0), BACKGROUNDDIR + '/' + filename);
         BackgroundDir = BACKGROUNDDIR + '/' + filename;
+
+        QPixmap pix(BackgroundDir);
+
+		double scale = static_cast<double>(this->size().height()) / static_cast<double>(this->size().width());
+        selectBackgroundwindow* sel = new selectBackgroundwindow(pix,nullptr,scale);
+        sel->show();
+
         writeBackgroundDir();
         setBackgroud();
     }

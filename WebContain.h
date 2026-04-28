@@ -10,9 +10,5 @@ class WebContain  : public QTabWidget
 public:
 	WebContain(QWidget *parent);
 	~WebContain();
-	void updateWebList(int index);
-public:
-	QList<MyWebEngineView*> webList;
-
 };
 

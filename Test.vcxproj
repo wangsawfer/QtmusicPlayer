@@ -110,8 +110,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="downloadWindow.cpp" />
+    <ClCompile Include="MyWebEnginePage.cpp" />
     <ClCompile Include="MyWebEngineView.cpp" />
     <ClCompile Include="QWarningWindow.cpp" />
+    <ClCompile Include="selectBackgroundwindow.cpp" />
+    <ClCompile Include="slideRect.cpp" />
     <ClCompile Include="web.cpp" />
     <ClCompile Include="WebContain.cpp" />
     <ClCompile Include="WebWindow.cpp" />
@@ -126,13 +129,17 @@
     <QtMoc Include="QWarningWindow.h" />
     <QtMoc Include="MyWebEngineView.h" />
     <QtMoc Include="downloadWindow.h" />
+    <QtMoc Include="MyWebEnginePage.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <QtMoc Include="selectBackgroundwindow.h" />
+    <ClInclude Include="slideRect.h" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <QtUic Include="selectBackgroundwindow.ui" />
     <QtUic Include="warnning.ui" />
     <QtUic Include="web.ui" />
   </ItemGroup>

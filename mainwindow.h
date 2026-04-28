@@ -10,6 +10,7 @@
 #include "QWarningWindow.h"
 #include "WebWindow.h"
 #include "downloadWindow.h"
+#include "selectBackgroundwindow.h"
 
 class mainwindow : public QMainWindow
 {
