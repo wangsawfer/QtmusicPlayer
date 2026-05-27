@@ -1,7 +1,7 @@
 #pragma once
 
 
-
+#include <QRemoteObjectNode>
 
 #include "stdafx.h"
 #include "ui_mainwindow.h"
@@ -11,13 +11,15 @@
 #include "WebWindow.h"
 #include "downloadWindow.h"
 #include "selectBackgroundwindow.h"
+#include "media_controller_replica.h"
+
 
 class mainwindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    mainwindow(QWidget *parent = nullptr);
+    mainwindow(QWidget* parent = nullptr);
     ~mainwindow();
     void setDir();
     void writeItem();
@@ -40,20 +42,19 @@ private slots:
     void nextItem();   //下一首
     //播放设备热重载
     void changeDevice();
-    void setPos();
     //进度条拖动
     void sliderPressed();
     void sliderMoved(qint64 value);
     void sliderReleased();
     //播放按钮与播放状态绑定
     void buttonToggled(bool checked);
-    void mediaStateChanged(QMediaPlayer::PlaybackState state);
+    void mediaStateChanged(int state);
     //播放时长和进度条与播放进度绑定
     void totalDuration(qint64 duration);
     void setPosition(qint64 position);
     //播放模式切换
     void modeChange();
-    void modePlay();
+    void modePlay(int status);
     //播放列表右键菜单
     void playListMenu(const QPoint& pos);
     //快进与快退
@@ -64,23 +65,31 @@ private slots:
     void soundSvgChange();
     void Mute();
     //刷新播放列表
-	void refreshItem();
+    void refreshItem();
     void download();
-    //网络浏览器槽函数
 private slots:
+    //网络浏览器槽函数
     void webinit();
-
-	//ui指针和窗口指针
+	void init_player();
+    void initReplica();
+public slots:
+	void poschange(qint64 pos);
+	void durchange(qint64 dur);
+	void statechange(int state);
+	void statuschange(int status);
+	void soundChange(qreal sound);
+	void loopsChange(int loops);
 private:
-    Ui::mainwindowClass *ui;
+    //ui指针和窗口指针
+    Ui::mainwindowClass* ui;
 
 
 
-	//页面相关变量
+    //页面相关变量
 private:
-    int playingItemIndex = 0;
+    int playingItemIndex = -2;
     int playMode = 1;
-    qint64 pos;
+
     qint64 soundValue = 100;
     bool isplaying = 0;
     bool isseeking = 0;//是否正在拖到进度条
@@ -88,12 +97,20 @@ private:
     QPixmap background;
     QStringList playList = {};
     QString BackgroundDir;
-    QMediaPlayer* m_player;
-    QAudioOutput* m_audioOutput;
+
+    qint64 pos;
+	qint64 dur;
+	int state;
+	int status;
+    qreal sound;
+	int loops;
+
     QMediaDevices* m_device;
-	WebWindow* web_window;
+    WebWindow* web_window;
     downloadWindow* download_page;
     //自定义控件实现
-
+	QProcess* media_player;
+    MediaControllerReplica* media_controller;
+    QRemoteObjectNode m_node;
 };
 

@@ -37,13 +37,13 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.10.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;widgets;multimedia;multimediawidgets;webenginecore;websockets;webview;webenginewidgets</QtModules>
+    <QtModules>core;gui;widgets;multimedia;multimediawidgets;remoteobjects;remoteobjectsqml;webenginecore;websockets;webview;webenginewidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
     <QtLibrarySearchPath>$(QtToolsPath);$(QtLibrarySearchPath)</QtLibrarySearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
     <QtInstall>6.10.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;widgets;multimedia;multimediawidgets;webenginecore;websockets;webview;webenginewidgets</QtModules>
+    <QtModules>core;gui;widgets;multimedia;multimediawidgets;remoteobjects;remoteobjectsqml;webenginecore;websockets;webview;webenginewidgets</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
     <QtLibrarySearchPath>$(QtToolsPath);$(QtLibrarySearchPath)</QtLibrarySearchPath>
   </PropertyGroup>
@@ -80,7 +80,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <QtMoc>
@@ -99,7 +99,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
@@ -130,6 +130,7 @@
     <QtMoc Include="MyWebEngineView.h" />
     <QtMoc Include="downloadWindow.h" />
     <QtMoc Include="MyWebEnginePage.h" />
+    <QtMoc Include="media_controller_replica.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <QtMoc Include="selectBackgroundwindow.h" />

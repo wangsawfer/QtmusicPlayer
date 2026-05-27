@@ -110,6 +110,9 @@
     <QtMoc Include="MyWebEnginePage.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="media_controller_replica.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">

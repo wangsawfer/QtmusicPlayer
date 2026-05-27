@@ -80,22 +80,43 @@ void mainwindow::highlight(int index) {
     //-----------------------------------------------------------------------------
 }
 
+void mainwindow::init_player() {
+	media_player = new QProcess(this);
+	QString playerPath = QCoreApplication::applicationDirPath() + "/musicPlayer.exe";
+    media_player->start(playerPath);
+    if (!media_player->waitForStarted()) {
+        new QWarningWindow(nullptr, QString("\u627E\u4E0D\u5230\u64AD\u653E\u5668\uFF01"));
+    }
+}
+
+void mainwindow::initReplica() {
+
+    m_node.connectToNode(QUrl("local:musicplayer"));
+	media_controller = m_node.acquire<MediaControllerReplica>();
+    // 等待副本有效，最多等待 2 秒
+    if (media_controller->waitForSource(2000)) {
+        qDebug() << "连接成功！";
+        // 可以连接信号或启用 UI 控件
+    }
+    else {
+        qDebug() << "连接失败，服务端未运行";
+        // 可以提示用户启动播放器，或自动启动服务端进程
+    }
+}
+
 mainwindow::mainwindow(QWidget* parent)
     : QMainWindow(parent), ui(new Ui::mainwindowClass)
 {
     ui->setupUi(this);
 
 	setWindowIcon(QIcon(":/mainwindow/icon.ico"));
+    init_player();
 
     setWindowTitle("\345\245\266\351\276\231\346\222\255\346\224\276\345\231\250");
     setDir();
     //媒体播放器初始化
-    m_player = new QMediaPlayer(this);
-    m_audioOutput = new QAudioOutput(this);
+
     m_device = new QMediaDevices(this);
-    m_player->setAudioOutput(m_audioOutput);
-    m_player->setLoops(QMediaPlayer::Infinite);//默认单曲循环
-    m_audioOutput->setVolume(1.0);
 
     //进度条初始化
     ui->ProcessBarSlider->setRange(0, 0);
@@ -110,23 +131,28 @@ mainwindow::mainwindow(QWidget* parent)
     ui->listWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     
     //信号槽的连接
-
+    initReplica();
     connect(ui->action, &QAction::triggered, this, &mainwindow::select);
     connect(ui->listWidget, &QListWidget::itemDoubleClicked, this, &mainwindow::play);
     connect(ui->Forward, &QPushButton::clicked, this, &mainwindow::forwardItem);
     connect(ui->Next, &QPushButton::clicked, this, &mainwindow::nextItem);
     connect(ui->PlayButton, &QPushButton::toggled, this, &mainwindow::buttonToggled);
-    connect(m_player, &QMediaPlayer::playbackStateChanged, this, &mainwindow::mediaStateChanged);
+    connect(media_controller, &MediaControllerReplica::playbackStateChanged, this, &mainwindow::mediaStateChanged);
     connect(ui->ProcessBarSlider, &QSlider::sliderPressed, this, &mainwindow::sliderPressed);
     connect(ui->ProcessBarSlider, &QSlider::sliderMoved, this, &mainwindow::sliderMoved);
     connect(ui->ProcessBarSlider, &QSlider::sliderReleased, this, &mainwindow::sliderReleased);
-    connect(m_player, &QMediaPlayer::durationChanged, this, &mainwindow::totalDuration);
-    connect(m_player, &QMediaPlayer::positionChanged, this, &mainwindow::setPosition);
-    connect(m_player, &QMediaPlayer::positionChanged, this, &mainwindow::setPos);
-    connect(m_player, &QMediaPlayer::playbackStateChanged, this, &mainwindow::setPos);
-    connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &mainwindow::setPos);
+    connect(media_controller, &MediaControllerReplica::durationChanged, this, &mainwindow::totalDuration);
+    connect(media_controller, &MediaControllerReplica::positionChanged, this, &mainwindow::setPosition);
     connect(m_device, &QMediaDevices::audioOutputsChanged, this, &mainwindow::changeDevice);
-    connect(m_player, &QMediaPlayer::mediaStatusChanged, this, &mainwindow::modePlay);
+    connect(media_controller, &MediaControllerReplica::mediaStatusChanged, this, &mainwindow::modePlay);
+
+	connect(media_controller, &MediaControllerReplica::positionChanged, this, &mainwindow::poschange);
+	connect(media_controller, &MediaControllerReplica::durationChanged, this, &mainwindow::durchange);
+    connect(media_controller, &MediaControllerReplica::playbackStateChanged, this, &mainwindow::statechange);
+	connect(media_controller, &MediaControllerReplica::mediaStatusChanged, this, &mainwindow::statuschange);
+	connect(media_controller, &MediaControllerReplica::volumeChanged, this, &mainwindow::soundChange);
+	connect(media_controller, &MediaControllerReplica::loopsChanged, this, &mainwindow::loopsChange);
+
     connect(ui->modeChange, &QPushButton::clicked, this, &mainwindow::modeChange);
     connect(ui->setbackground, &QAction::triggered, this, &mainwindow::selectBackground);
     connect(ui->listWidget, &QListWidget::customContextMenuRequested, this, &mainwindow::playListMenu);
@@ -136,6 +162,7 @@ mainwindow::mainwindow(QWidget* parent)
     connect(ui->soundSlider, &QSlider::valueChanged, this, &mainwindow::soundSvgChange);
     connect(ui->soundChange, &QPushButton::clicked, this, &mainwindow::Mute);
     connect(ui->refresh, &QAction::triggered, this, &mainwindow::refreshItem);
+
 
     //网络相关实现
 	connect(ui->webbotton, &QAction::triggered, this, &mainwindow::webinit);
@@ -182,17 +209,17 @@ mainwindow::mainwindow(QWidget* parent)
     readItem();
     readBackgroundDir();
     update();
-	
+
 }
 
 mainwindow::~mainwindow()
 {
     delete ui;
-    delete m_player;
-    delete m_audioOutput;
+	delete media_player;
     delete m_device;
 	delete web_window;
     delete download_page;
+	delete media_controller;
 }
 
 void mainwindow::closeEvent(QCloseEvent* event) {
@@ -283,9 +310,16 @@ void mainwindow::play(QListWidgetItem *item) {
     QString filePath = playList.at(index);
     QFileInfo fileinfo(filePath);
     if (fileinfo.exists()) {
-        m_player->pause();
-        m_player->setSource(QUrl::fromLocalFile(filePath));
-        m_player->play();
+        //m_player->pause();
+        //m_player->setSource(QUrl::fromLocalFile(filePath));
+        //qDebug() << filePath;
+       // m_player->play();
+
+		media_controller->setSource(filePath);
+        QTimer::singleShot(500, this, [this]() {
+            media_controller->play();
+            });
+
         highlight(index);
         playingItemIndex = index;
         item->setForeground(QColor(Qt::black));
@@ -305,9 +339,11 @@ void mainwindow::forwardItem() {
             QString filePath = playList.at(index);
             QFileInfo fileinfo(filePath);
             if (fileinfo.exists()) {
-                m_player->pause();
-                m_player->setSource(QUrl::fromLocalFile(filePath));
-                m_player->play();
+
+                media_controller->setSource(filePath);
+                QTimer::singleShot(500, this, [this]() {
+                    media_controller->play();
+                    });
                 highlight(index);
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
@@ -323,9 +359,11 @@ void mainwindow::forwardItem() {
             QString filePath = playList.at(index);
             QFileInfo fileinfo(filePath);
             if (fileinfo.exists()) {
-                m_player->pause();
-                m_player->setSource(QUrl::fromLocalFile(filePath));
-                m_player->play();
+
+                media_controller->setSource(filePath);
+                QTimer::singleShot(500, this, [this]() {
+                    media_controller->play();
+                    });
                 highlight(index);
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
@@ -347,9 +385,11 @@ void mainwindow::nextItem(){
             QString filePath = playList.at(index);
             QFileInfo fileinfo(filePath);
             if (fileinfo.exists()) {
-                m_player->pause();
-                m_player->setSource(QUrl::fromLocalFile(filePath));
-                m_player->play();
+
+                media_controller->setSource(filePath);
+                QTimer::singleShot(500, this, [this]() {
+                    media_controller->play();
+                    });
                 highlight(index);
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
@@ -365,9 +405,11 @@ void mainwindow::nextItem(){
             QString filePath = playList.at(index);
             QFileInfo fileinfo(filePath);
             if (fileinfo.exists()) {
-                m_player->pause();
-                m_player->setSource(QUrl::fromLocalFile(filePath));
-                m_player->play();
+
+                media_controller->setSource(filePath);
+                QTimer::singleShot(500, this, [this]() {
+                    media_controller->play();
+                    });
                 highlight(index);
                 ui->listWidget->item(playingItemIndex)->setForeground(QColor(Qt::black));
             }
@@ -379,7 +421,7 @@ void mainwindow::nextItem(){
         }
     }
     else {
-        m_player->stop();
+		media_controller->stop();
     }
 }
 
@@ -388,30 +430,33 @@ void mainwindow::buttonToggled(bool checked) {
     if (playingItemIndex != -1) {
         if (checked && !playList.isEmpty()) {
             //未指定媒体源初始化为第一个
-            if (m_player->mediaStatus() == QMediaPlayer::NoMedia()) {
-                m_player->setSource(QUrl::fromLocalFile(playList.at(0)));
+            if (playingItemIndex == -2) {
+                media_controller->setSource(playList.at(0));
                 highlight(0);
+                QTimer::singleShot(500, this, [this]() {
+                    media_controller->play();
+                    });
                 playingItemIndex = 0;
             }
-            m_player->play();
+			media_controller->play();
         }
         else {
-            m_player->pause();
+            media_controller->pause();
         }
     }
-}
-void mainwindow::mediaStateChanged(QMediaPlayer::PlaybackState state) {
+}//
+void mainwindow::mediaStateChanged(int state) {
     switch (state)
     {
-    case QMediaPlayer::StoppedState:
+    case 0:
         ui->PlayButton->setChecked(0);
-        m_player->setPosition(0);
-        m_player->pause();
+        media_controller->pushPosition(0);
+        media_controller->pause();
         break;
-    case QMediaPlayer::PlayingState:
+    case 1:
         ui->PlayButton->setChecked(1);
         break;
-    case QMediaPlayer::PausedState:
+    case 2:
         ui->PlayButton->setChecked(0);
         break;
     default:
@@ -462,7 +507,7 @@ void mainwindow::sliderMoved(qint64 value) {
 }
 void mainwindow::sliderReleased() {
     qint64 value = ui->ProcessBarSlider->value();
-    m_player->setPosition(value);
+    media_controller->pushPosition(value);
     isseeking = false;
     QString time;
     //时间格式化   ms -> hh:mm:ss
@@ -480,7 +525,7 @@ void mainwindow::sliderReleased() {
 
 //设置播放进度
 void mainwindow::setPosition(qint64 position) {
-    if (m_player->isPlaying()&& !isseeking) {
+    if (!isseeking) {
         QString time;
         //时间格式化   ms -> hh:mm:ss
         qint64 totalseconds = position / 1000;
@@ -501,37 +546,29 @@ void mainwindow::setPosition(qint64 position) {
 }
 
 //输出设备热插拔处理   初步解决
-void mainwindow::setPos() {
 
-    if (m_player->playbackState()==QMediaPlayer::PlayingState && m_player->mediaStatus() == QMediaPlayer::BufferedMedia && !(m_player->position() == qint64(0)))
-    {
-        pos = m_player->position();
-        isplaying = true;
-    }
-    else if (m_player->playbackState() == QMediaPlayer::PausedState && m_player->mediaStatus() == QMediaPlayer::BufferedMedia && !(m_player->position() == qint64(0)))
-    {
-        pos = m_player->position();
-        isplaying = false;
-    }
-}
 void mainwindow::changeDevice() {
-    m_player->stop();
-    m_audioOutput->setDevice(m_device->defaultAudioOutput());
-    m_player->setSource(playList.at(playingItemIndex));
-    while (!(m_player->isSeekable()) || !(m_player->mediaStatus()==QMediaPlayer::LoadedMedia)) {
+    if (media_player) {
+        media_player->kill();
+        delete media_player;
     }
-    m_player->setPosition(pos);
-    if (isplaying) {
-        m_player->play();
-    }
-    else {
-        m_player->pause();
-    }
+	init_player();    
+    QTimer::singleShot(100, this, [this]() {
+        initReplica();
+        media_controller->setSource(playList.at(playingItemIndex));
+        QTimer::singleShot(500, this, [this]() {
+            media_controller->play();
+			media_controller->pushVolume(sound);
+			media_controller->pushPosition(pos);
+			media_controller->pushLoops(loops);
+			});
+        });
+    
 }
 
 //播放模式切换
-void mainwindow::modePlay() {
-    if (m_player->mediaStatus() == QMediaPlayer::EndOfMedia) {
+void mainwindow::modePlay(int status) {
+    if (status == QMediaPlayer::EndOfMedia) {
         switch (playMode)
         {
         case 1: {
@@ -546,7 +583,7 @@ void mainwindow::modePlay() {
                 nextItem();
             }
             else {
-                m_player->stop();
+                media_controller->stop();
             }
             break;
         }
@@ -571,25 +608,25 @@ void mainwindow::modeChange() {
     switch (playMode)
     {
     case 1:
-        m_player->setLoops(QMediaPlayer::Infinite);
+        media_controller->pushLoops(QMediaPlayer::Infinite);
         ic.addFile(":/mainwindow/mode1.svg", QSize(30, 30), QIcon::Normal);
         ui->modeChange->setIcon(ic);
         ui->modeChange->setIconSize(QSize(30, 30));
         break;
     case 2:
-        m_player->setLoops(1);
+        media_controller->pushLoops(1);
         ic.addFile(":/mainwindow/mode2.svg", QSize(30, 30), QIcon::Normal);
         ui->modeChange->setIcon(ic);
         ui->modeChange->setIconSize(QSize(30, 30));
         break;
     case 3:
-        m_player->setLoops(1);
+        media_controller->pushLoops(1);
         ic.addFile(":/mainwindow/mode3.svg", QSize(30, 30), QIcon::Normal);
         ui->modeChange->setIcon(ic);
         ui->modeChange->setIconSize(QSize(30, 30));
         break;
     case 4:
-        m_player->setLoops(1);
+        media_controller->pushLoops(1);
         ic.addFile(":/mainwindow/mode4.svg", QSize(30, 30), QIcon::Normal);
         ui->modeChange->setIcon(ic);
         ui->modeChange->setIconSize(QSize(30, 30));
@@ -623,26 +660,28 @@ void mainwindow::playListMenu(const QPoint &pos) {
                 }
                 else  {
                     if (ui->listWidget->count() > 1) {
-                        m_player->stop();
+						media_controller->stop();
                         delete ui->listWidget->takeItem(row);
                         if (row == ui->listWidget->count()) {
                             playingItemIndex -= 1;
-                            m_player->setSource(playList.at(playingItemIndex));
+							media_controller->setSource(playList.at(playingItemIndex));
                         }
                         else {
-                            m_player->setSource(playList.at(playingItemIndex));
+                            media_controller->setSource(playList.at(playingItemIndex));
                         }
                         highlight(playingItemIndex);
                         QFile::remove(playList.at(row));
                         playList.removeAt(row);
-                        m_player->play();
+                        QTimer::singleShot(500, this, [this]() {
+                            media_controller->play();
+                            });
                         writeItem();
                     }
                     else {
                         playingItemIndex = -1;
-                        m_player->stop();
+                        media_controller->stop();
                         delete ui->listWidget->takeItem(row);
-                        m_player->setSource(QString(""));
+                        media_controller->setSource("");
                         QFile::remove(playList.at(row));
                         playList.removeAt(row);
                         writeItem();
@@ -656,14 +695,14 @@ void mainwindow::playListMenu(const QPoint &pos) {
 //快进和快退
 void mainwindow::rewind() {
     int step = ui->stepedit->text().toInt();
-    if ((m_player->position() - step >= 0) && step >= 0) {
-        m_player->setPosition(m_player->position() - step);
+    if ((pos - step >= 0) && step >= 0) {
+        media_controller->pushPosition(pos - step);
     }
 }
 void mainwindow::Fast_forward() {
     int step = ui->stepedit->text().toInt();
-    if (m_player->position() + step <= m_player->duration() && step >= 0) {
-        m_player->setPosition(m_player->position() + step);
+    if (pos + step <= dur && step >= 0) {
+        media_controller->pushPosition(pos + step);
     }
 }
 
@@ -678,7 +717,7 @@ void mainwindow::soundSet() {
         ismute = 0;
     }
     ui->soundLabel->setText(QString::number(value));
-    m_audioOutput->setVolume(value / 100.0);
+	media_controller->pushVolume(value / 100.0);
 }
 void mainwindow::soundSvgChange() {
     int value = ui->soundSlider->value();
@@ -703,12 +742,12 @@ void mainwindow::Mute() {
     if (!ismute) {
         soundValue = ui->soundSlider->value();
         ui->soundSlider->setValue(0);
-        m_audioOutput->setVolume(0);
+        media_controller->pushVolume(0);
         ismute = 1;
     }
     else {
         ui->soundSlider->setValue(soundValue);
-        m_audioOutput->setVolume(soundValue/100.0);
+        media_controller->pushVolume(soundValue / 100.0);
         ismute = 0;
     }
 }
@@ -730,4 +769,29 @@ void mainwindow::refreshItem() {
 		}
     }
     writeItem();
+}
+
+void mainwindow::poschange(qint64 pos) {
+	this->pos = pos;
+	qDebug() << "Position changed: " << pos;
+}
+void mainwindow::durchange(qint64 dur) {
+	this->dur = dur;
+	qDebug() << "Duration changed: " << dur;
+}
+void mainwindow::statechange(int state) {
+	this->state = state;
+	qDebug() << "State changed: " << state;
+}
+void mainwindow::statuschange(int status) {
+	this->status = status;
+	qDebug() << "Status changed: " << status;
+}
+void mainwindow::soundChange(qreal sound) {
+	this->sound = sound;
+	qDebug() << "Sound changed: " << sound;
+}
+void mainwindow::loopsChange(int loops) {
+    this->loops = loops;
+	qDebug() << "Loops changed: " << loops;
 }

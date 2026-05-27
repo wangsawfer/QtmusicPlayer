@@ -4,6 +4,8 @@
 
 int main(int argc, char *argv[])
 {
+    qputenv("QTWEBENGINE_LOCALES_PATH", "/translations");
+    qputenv("QTWEBENGINE_RESOURCES_PATH", "/resources");
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES);
     qputenv("QTWEBENGINE_DISABLE_SANDBOX", QByteArray("1"));
     QApplication app(argc, argv);
